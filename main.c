@@ -33,6 +33,19 @@ const char* getGrade(float avg) {
     else return "F";
 }
 
+float getCGPA(float mark) {
+    if (mark >= 80) return 4.00;
+    else if (mark >= 75) return 3.75;
+    else if (mark >= 70) return 3.50;
+    else if (mark >= 65) return 3.25;
+    else if (mark >= 60) return 3.00;
+    else if (mark >= 55) return 2.75;
+    else if (mark >= 50) return 2.50;
+    else if (mark >= 45) return 2.25;
+    else if (mark >= 40) return 2.00;
+    else return 0;
+}
+
 float getSubjectWiseNumber(float mark) {
     if (mark >= 80) return 80;
     else if (mark >= 75) return 75;
@@ -115,9 +128,9 @@ void displayStudents() {
             printf("%s Marks:  %.2f & Grade: %s\n", subjects[j], students[i].marks[j], getGrade(students[i].marks[j]));
 
         }
-        printf("Total: %.2f, Average: %.2f, CGPA: %s\n",
+        printf("Total: %.2f, Average: %.2f, Grade: %s ,CGPA: %.2f\n",
                students[i].total, students[i].actual_average,
-               getGrade(students[i].average));
+               getGrade(students[i].average),getCGPA(students[i].average));
     }
 }
 
