@@ -15,6 +15,7 @@ struct student {
     float total;
     float actual_average;
     float average;
+    float cgpa;
 };
 
 struct student students[MAX_STUDENTS];
@@ -63,11 +64,10 @@ void menu() {
     printf("\n====* Student Management Menu *====\n");
     printf("1. Add Student\n");
     printf("2. Display Students\n");
-    printf("3. Display All Students\n");
-    printf("4. Search Student\n");
-    printf("5. Update Student\n");
-    printf("6. Delete Student\n");
-    printf("7. Sort by ID\n");
+    printf("3. Search Student\n");
+    printf("4. Update Student\n");
+    printf("5. Delete Student\n");
+    printf("6. Sort by ID\n");
     printf("\033[1;31m0. Exit\033[0m\n");  
     printf("Enter your choice: ");
 }
@@ -99,17 +99,19 @@ void addStudent() {
     printf("Enter Department: ");
     scanf(" %[^\n]", students[count].department);
 
-    float sum = 0, graded_sum = 0;
+    float sum = 0, graded_sum = 0,sum_cgpa = 0;
     for (int i = 0; i < subject_count; i++) {
         printf("Enter marks for %s: ", subjects[i]);
         scanf("%f", &students[count].marks[i]);
         sum += students[count].marks[i];
+        sum_cgpa += getCGPA(students[count].marks[i]) ;
         graded_sum += getSubjectWiseNumber(students[count].marks[i]);
     }
 
     students[count].total = sum;
     students[count].actual_average = sum / subject_count;
     students[count].average = graded_sum / subject_count;
+    students[count].cgpa = sum_cgpa / subject_count;
 
     count++;
     printf("Student added successfully.\n");
@@ -130,39 +132,10 @@ void displayStudents() {
         }
         printf("Total: %.2f, Average: %.2f, Grade: %s ,CGPA: %.2f\n",
                students[i].total, students[i].actual_average,
-               getGrade(students[i].average),getCGPA(students[i].average));
+               getGrade(students[i].average),students[i].cgpa);
     }
 }
 
-void displayAllStudents() {
-    if (count == 0) {
-        printf("No students to display.\n");
-        return;
-    }
-
-    // Header row
-    printf("\n%-10s %-20s %-15s", "ID", "Name", "Department");
-    for (int i = 0; i < subject_count; i++) {
-        printf(" %-8s", subjects[i]);
-    }
-    printf(" %-8s %-8s %-6s\n", "Total", "Avg", "CGPA");
-
-    // Separator line
-    for (int i = 0; i < 60 + subject_count * 11; i++) printf("-");
-    printf("\n");
-
-    // Student rows
-    for (int i = 0; i < count; i++) {
-        printf("%-10s %-20s %-15s", students[i].id, students[i].name, students[i].department);
-        for (int j = 0; j < subject_count; j++) {
-            printf(" %-10.2f", students[i].marks[j]);
-        }
-        printf(" %-8.2f %-8.2f %-6s\n",
-               students[i].total,
-               students[i].actual_average,
-               getGrade(students[i].average));
-    }
-}
 
 
 void searchStudent() {
@@ -255,11 +228,10 @@ int main() {
         switch (choice) {
             case 1: addStudent(); break;
             case 2: displayStudents(); break;
-            case 3: displayAllStudents(); break;
-            case 4: searchStudent(); break;
-            case 5: updateStudent(); break;
-            case 6: deleteStudent(); break;
-            case 7: sortStudents(); break;
+            case 3: searchStudent(); break;
+            case 4: updateStudent(); break;
+            case 5: deleteStudent(); break;
+            case 6: sortStudents(); break;
             case 0: printf("Exiting...\n"); break;
             default: printf("Invalid choice. Try again.\n");
         }
